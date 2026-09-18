@@ -9,21 +9,19 @@
 <body class="bg-gray-900 flex items-center justify-center h-screen text-gray-100">
     <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl text-center w-96 border border-gray-700">
         <h1 id="radioTitle" class="text-2xl font-bold text-emerald-400 mb-1">إذاعة القرآن الكريم</h1>
-        <p id="statusText" class="text-gray-400 text-sm mb-6">جاهز للاستماع على مدار الساعة</p>
+        <p id="statusText" class="text-gray-400 text-sm mb-6">بث مباشر على مدار الساعة</p>
 
         <!-- قائمة اختيار الإذاعات -->
         <div class="mb-6 text-right">
             <label for="stationSelect" class="block text-xs text-gray-400 mb-2">اختر الإذاعة المفضلة:</label>
             <select id="stationSelect" onchange="changeStation()" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                 <option value="https://stream.radiojar.com/8s5u5tpftwzuv">إذاعة القرآن الكريم (من القاهرة)</option>
-                <option value="https://n12.radiojar.com/8s5u5tpdtwzuv">إذاعة القرآن الكريم (رابط احتياطي)</option>
             </select>
         </div>
 
         <!-- مشغل الصوت المباشر -->
         <audio id="radioPlayer" preload="auto">
-            <source id="audioSource" src="https://stream.radiojar.com/8s5u5tpftwzuv" type="audio/aac">
-            <source id="audioSourceMp3" src="https://stream.radiojar.com/8s5u5tpftwzuv" type="audio/mpeg">
+            <source id="audioSource" src="https://stream.radiojar.com/8s5u5tpftwzuv" type="audio/mpeg">
             متصفحك لا يدعم مشغل الصوت.
         </audio>
 
@@ -40,6 +38,7 @@
 
     <script>
         const player = document.getElementById("radioPlayer");
+        const audioSource = document.getElementById("audioSource");
         const stationSelect = document.getElementById("stationSelect");
         const radioTitle = document.getElementById("radioTitle");
         const statusText = document.getElementById("statusText");
@@ -49,16 +48,16 @@
             const selectedUrl = stationSelect.value;
             const selectedText = stationSelect.options[stationSelect.selectedIndex].text;
             
-            player.src = selectedUrl;
+            audioSource.src = selectedUrl;
             radioTitle.innerText = selectedText;
             statusText.innerText = "جاري الاتصال بالبث...";
+            player.load();
             
             player.play().then(() => {
                 playBtn.innerText = "إيقاف مؤقت";
                 statusText.innerText = "البث يعمل الآن مباشرة";
             }).catch(error => {
-                statusText.innerText = "تعذر تشغيل البث تلقائياً، اضغط تشغيل";
-                playBtn.innerText = "تشغيل البث";
+                statusText.innerText = "تعذر التشغيل، اضغط على زر تشغيل البث";
             });
         }
 
@@ -69,7 +68,7 @@
                     playBtn.innerText = "إيقاف مؤقت";
                     statusText.innerText = "البث يعمل الآن مباشرة";
                 }).catch(e => {
-                    statusText.innerText = "خطأ في تشغيل الرابط، جرب الرابط الاحتياطي";
+                    statusText.innerText = "خطأ في استقبال البث";
                 });
             } else {
                 player.pause();
@@ -84,11 +83,6 @@
             playBtn.innerText = "تشغيل البث";
             statusText.innerText = "تم الإيقاف";
         }
-
-        player.addEventListener('error', function() {
-            statusText.innerText = "عذراً، حدث خطأ في استقبال البث الحي";
-            playBtn.innerText = "تشغيل البث";
-        });
     </script>
 </body>
 </html>
