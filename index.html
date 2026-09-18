@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شبكة الإذاعات المصرية المباشرة</title>
+    <!-- استدعاء Tailwind CSS لتنسيق التصميم -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen text-gray-100">
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl text-center w-96 border border-gray-700">
+        <h1 id="radioTitle" class="text-2xl font-bold text-emerald-400 mb-1">إذاعة القرآن الكريم</h1>
+        <p class="text-gray-400 text-sm mb-6">بث مباشر على مدار الساعة</p>
+
+        <!-- قائمة اختيار الإذاعات -->
+        <div class="mb-6 text-right">
+            <label for="stationSelect" class="block text-xs text-gray-400 mb-2">اختر الإذاعة المفضلة:</label>
+            <select id="stationSelect" onchange="changeStation()" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                <option value="https://stream.radiojar.com/8s5u5tpftwzuv">إذاعة القرآن الكريم (من القاهرة)</option>
+                <option value="رابط_بث_ماسبيرو_زمان">ماسبيرو زمان</option>
+                <option value="رابط_بث_البرنامج_العام">البرنامج العام</option>
+                <option value="رابط_بث_الشرق_الأوسط">الشرق الأوسط</option>
+                <option value="رابط_بث_صوت_العرب">صوت العرب</option>
+            </select>
+        </div>
+
+        <!-- مشغل الصوت -->
+        <audio id="radioPlayer" preload="none">
+            <source id="audioSource" src="https://stream.radiojar.com/8s5u5tpftwzuv" type="audio/mpeg">
+        </audio>
+
+        <!-- أزرار التحكم -->
+        <div class="flex justify-center gap-4">
+            <button onclick="togglePlay()" id="playBtn" class="bg-emerald-600 text-white px-8 py-3 rounded-full hover:bg-emerald-700 transition font-bold shadow-md w-full">
+                تشغيل
+            </button>
+            <button onclick="stopRadio()" class="bg-red-900/40 text-red-400 px-6 py-3 rounded-full hover:bg-red-900/60 transition font-bold border border-red-800/50">
+                إيقاف
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const player = document.getElementById("radioPlayer");
+        const audioSource = document.getElementById("audioSource");
+        const stationSelect = document.getElementById("stationSelect");
+        const radioTitle = document.getElementById("radioTitle");
+        const playBtn = document.getElementById("playBtn");
+
+        function changeStation() {
+            const selectedUrl = stationSelect.value;
+            const selectedText = stationSelect.options[stationSelect.selectedIndex].text;
+            
+            audioSource.src = selectedUrl;
+            radioTitle.innerText = selectedText;
+            player.load();
+            player.play();
+            playBtn.innerText = "إيقاف مؤقت";
+        }
+
+        function togglePlay() {
+            if (player.paused) {
+                player.play();
+                playBtn.innerText = "إيقاف مؤقت";
+            } else {
+                player.pause();
+                playBtn.innerText = "تشغيل";
+            }
+        }
+
+        function stopRadio() {
+            player.pause();
+            player.currentTime = 0;
+            playBtn.innerText = "تشغيل";
+        }
+    </script>
+</body>
+</html>
